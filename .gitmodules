@@ -1,3 +1,0 @@
-[submodule "todobackend-client"]
-	path = todobackend-client
-	url = https://github.com/jmenga/todobackend-client.git
