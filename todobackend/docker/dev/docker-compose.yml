@@ -12,6 +12,23 @@ test:
     MYSQL_PASSWORD: password
     TEST_OUTPUT_DIR: /reports
 
+builder:
+  build: ../../
+  dockerfile: docker/dev/Dockerfile
+  volumes_from:
+    - cache
+  entrypoint: "entrypoint.sh"
+  command: ["pip", "wheel", "--no-index", "-f /build", "."]
+
+agent:
+  image: hoonio/ansible
+  links:
+    - db
+  environment:
+    PROBE_HOST: "db"
+    PROBE_PORT: "3306"
+  command: ["probe.yml"]
+
 db:
   image: mysql:5.6
   hostname: db
@@ -24,6 +41,6 @@ cache:
   build: ../../
   dockerfile: docker/dev/Dockerfile
   volumes:
-    - /tmp/cache:/cache
+    - /private/tmp/cache:/cache
     - /build
   entrypoint: "true"
